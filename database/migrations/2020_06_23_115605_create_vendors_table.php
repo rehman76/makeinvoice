@@ -19,7 +19,7 @@ class CreateVendorsTable extends Migration
             $table->string('address');
             $table->integer('category_id')->unsigned();
             $table->foreign('category_id')->references('id')->on('categories')->onDelete('cascade');
-            $table->timestamp('last_usage_timestamp')->nullable();
+            $table->timestamp('last_usage_timestamp')->default('1970-06-09 15:39:49');
             $table->timestamps();
         });
     }

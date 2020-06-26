@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class MasterInvoice extends Model
 {
     protected $fillable = [
-        'name','date','total','CREATED_AT','UPDATED_AT'
+        'name','date','total','category_id','CREATED_AT','UPDATED_AT'
     ];
 
 

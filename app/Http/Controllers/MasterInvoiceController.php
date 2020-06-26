@@ -33,14 +33,44 @@ class MasterInvoiceController extends Controller
 
     public function createmasterInvoice(Request $request)
     {
+        $current_time = \Carbon\Carbon::now()->toDateTimeString();
        // $value = session('max');
        // return response()->json($request->all());
         $maxTotal = 50000;
+
+        //get invoice keys
+        $invoice = Invoice::WHERE('master_id','=',1)->get();
+        $vendorKey = Vendor::find(1);
+        $getinvoiceKeys = $invoice->first();
+        $attributeInvoice = array_keys($getinvoiceKeys->toArray());
+
+        $getvendorKeys = $vendorKey->first();
+        $attributesVendor = array_keys($getvendorKeys->toArray());
+
+        foreach($invoice as $invoices)
+        {
+            $arr[] = $invoices->vendor_id;
+        }
+
+        $vendor = DB::table('vendors')
+                            ->WhereIn('id',$arr)->get();
+            $vendors = $vendor->toArray();
+            $results = array();
+            foreach($invoice as $key=>$data)
+            {
+                $newarr =array();
+                $newarr['id'] = $data->id;
+                $newarr['total'] = $data->total;
+                $newarr['name'] = $vendors[$key]->name;
+                $results[] = $newarr;
+
+            }
+
+            return view('invoice_view')->with('results',$results);
+
         $masterInvoice = new MasterInvoice();
         $input = $request->all();
-        $vendor = Vendor::WHERE('id','=',8)->get();
-        $invoice = Invoice::get();
-        return view('invoice_view')->with('invoice',$invoice)->with('vendor',$vendor);
+
         $lines = $input['line_items'];
         $masterInvoice->fill($request->all());
         $masterInvoice->save();
@@ -77,9 +107,9 @@ class MasterInvoiceController extends Controller
                 $inv->vendor_id = $vendor->id;
                 $inv->total = $qty * $ml->unit_price;
                 $inv->save();
-//Update lastusage timestamp of vendor
-                //$vendor->last_usage_timestamp = now();
-                //$vendor->save()
+                //Update lastusage timestamp of vendor
+                $vendor->last_usage_timestamp = $current_time;
+                $vendor->save();
 
                 $invLine  = new InvoiceLine();
                 $invLine->quantity = $qty;
@@ -90,15 +120,17 @@ class MasterInvoiceController extends Controller
                 $invLine->save();
             }
         }
-        //$invoicetesting = Invoice::find($inv->id);
-        //session(['id'=>$invoicetesting->master_id]);
-        //$this->id = $invoicetesting->master_id;
-        //return response()->json($invoicetesting);
-       $id = $this->prepareInvoice($vendor->id);
-       return $id;
-        //return $test;
-        //$masterInvoice = MasterInvoice::find($masterInvoice->id);
-        //return response()->json($masterInvoice);
+
+        /*$invoice = Invoice::WHERE('master_id','=',$masterInvoice->id)->get();
+        foreach($invoice as $invoices)
+        {
+            $arr[] = $invoices->vendor_id;
+        }
+        $vendor = DB::table('vendors')
+                            ->WhereIn('id',$arr)->get();
+
+            return view('invoice_view')->with('invoice',$invoice)->with('vendor',$vendor);*/
+
     }
 
     public function fetchallmasterInvoice()
@@ -123,18 +155,13 @@ class MasterInvoiceController extends Controller
         $masterInvoice->delete();
     }
 
-    public function prepareInvoice($id=0){
-        //$vendor = Vendor::find($id);
-        //$name = $vendor->name;
-        //$invoice = Invoice::WHERE('vendor_id','=',$id)->get();
-        //$data=array('invoice'=>$invoice, 'name'=>$name);
+    public function fetchStatement($id)
+    {
+        $invoiceLine = InvoiceLine::find($id);
+        $invoice = Invoice::select('total')->find($id);
+        //return response()->json($invoice);
+        return view('invoice', compact(['invoiceLine', 'invoice']));
 
-        //return response()->json($data);
-        //$name = $masterInvoice->name;
-
-        //return view('create_master',compact('invoice','name'));
-        return view('create_master');
-        //return $master->lines();
     }
 
 

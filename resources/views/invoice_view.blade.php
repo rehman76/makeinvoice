@@ -32,21 +32,17 @@
             <th class="text-center">Action</th>
 
         </tr>
-        @foreach($invoice as $invoices)
-        @foreach($vendor as $vendors)
+        @foreach($results as $result)
         <tr>
-            <td>{{$vendors->name}}</td>
-            <td>{{ $invoices->total }}</td>
+            <td>{{$result['name']}}</td>
+            <td>{{ $result['total']}}</td>
 
-            <td class="text-center"><a target="_blank" onclick="window.open('invoice.html','View','width=1000,height=630')" class="btn btn-primary text-light" role="button">View</a>
+            <td class="text-center"><a href = "/makeinvoice/{{$result['id']}}" target="_blank" class="btn btn-primary text-light" role="button">View</a>
             </td>
         </tr>
         @endforeach
-        @endforeach
     </table>
-    <div class="text-right my-4">
-        <a class="btn btn-danger" href={{route('invoice')}} style="margin-right:8rem">View All Invoices</a>
-    </div>
+
     <iframe id="printPage" name="printPage" src="invoice.html" style="position:absolute;top:0px; left:0px;width:0px; height:0px;border:0px;overflow:none; z-index:-1"></iframe>
 
     </div>

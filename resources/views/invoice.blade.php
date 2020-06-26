@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -49,20 +50,18 @@
         <th>Total</th>
       </tr>
     </thead>
-    @foreach($invoiceLine as $invoiceLines)
       <tr style="height: 150px;">
-      <td>{{$invoiceLines->id}}</td>
-      <td>{{$invoiceLines->item}}</td>
-      <td>{{$invoiceLines->quantity}}</td>
-      <td>{{$invoiceLines->unit_price}}</td>
+      <td>{{$invoiceLine->id}}</td>
+      <td>{{$invoiceLine->item}}</td>
+      <td>{{$invoiceLine->quantity}}</td>
+      <td>{{$invoiceLine->unit_price}}</td>
       </tr>
 
-   @endforeach
    <td></td>
    <td></td>
    <td></td>
    <td></td>
-   <td>{{$masterInvoice->total}}</td>
+   <td>{{$invoice->total}}</td>
   </table>
   <h5 class="text-center bg-danger py-2">2nd floor, Walton Road Lahore</h5>
 </div>
