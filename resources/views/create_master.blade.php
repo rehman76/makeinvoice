@@ -2,141 +2,135 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Creat master</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
-
+​
     <link href = "https://code.jquery.com/ui/1.10.4/themes/ui-lightness/jquery-ui.css" rel = "stylesheet">
     <script src = "https://code.jquery.com/jquery-1.10.2.js"></script>
     <script src = "https://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
-
-
-
-
+​
+​
+    <style>
+      .crd{
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);;
+      }
+        .print {visibility:visible;}
+        @media print {
+        .bt {
+         display: none;
+         }
+        body {
+        width:100%!important;
+        padding:0!important;
+        margin:0!important;
+        }
+        }
+        @page {
+        margin: 2cm;
+        }
+​
+    </style>
 </head>
 <body>
-
-    <div class="container">
-        <div class="row mt-3">
-            <div class="col-3">
-                <form class="form-inline" action="/action_page.php">
-                <label for="Name">Name:</label>
-                <input type="text" class="form-control ml-1" placeholder="Name" id="name">
-                </form>
-            </div>
-
-            <div class="col-3">
-                <form class="form-inline" action="/action_page.php">
-                <label for="Date">Date:</label>
-                <input type = "text" class="form-control ml-1" id = "datepicker-1">
-                </form>
-            </div>
-        </div>
-
-        <div class="row mt-3">
-            <div class="col">
-                <div class="form-group position-relative">
-                    <label for="Pieces">Add Category</label>
-                    <select class="form-control">
-                            <option  value="0">Category</option>
-                            <option  value="1"></option>
-                            <option value="2"></option>
-                          </select>
-                </div>
-            </div>
-        </div>
-
-
-    <div class="row">
-        <div class="col">
-                <table class="table border-bottom">
-                <thead>
-                <tr>
-                <th>Sr No.</th>
-                <th>Items</th>
-                <th>qby</th>
-                <th>unit</th>
-                <th>Price</th>
-                <th>Add</th>
-                </tr>
-        </thead>
-        <tbody>
-        <tr>
-            <td>1</td>
-            <td></td>
-            <td><input type="number" name="quantity" min="1" max="10" value="1" class="form-control text-center"></td>
-            <td><input type="number" name="quantity" min="1" max="10" value="1" class="form-control text-center"></td>
-            <td></td>
-            <td><button type="button" class="btn btn-primary add-row">+</td>
-        </tr>
-        <tr>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td >Total</td>
-            <td></td>
-            <td></td>
-        </tr>
-        </tbody>
-    </table>
-        </div>
-        </div>
-
-    <h1 class="border text-center mt-3">Master Line view</h1>
-        <!-- Button to Open the Modal -->
-
-    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">
+​
+    <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
+        <ul class="navbar-nav container">
+          <li class="nav-item active">
+            <a class="nav-link" href="create master.html">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#"></a>
+          </li>
+        </ul>
+    </nav>
+​
+    <div class="container mt-5">
+      <div class="card bg-light crd">
+        <div class="card-body">
+​
+          <form action = "{{url('/master_invoice')}}" method="post">
+          @csrf
+          <input type="text" name="name"/>
+          <input name="line_items[]"/>
+          <input name="line_items[]"/>
+          <input type="text" name="line_items[item]",value = "5Ltr Bottle"/>
+          <input type="text" name="line_items[unit_price]" value="500"/>
+              <div class="text-center mt-5">
+                <button type="submit" class="btn btn-primary" id="add">Create Invoice</button>
+              </div>
+          </form>
+​
+<!----<button type="button" class="btn btn-primary bt" data-toggle="modal" data-target="#myModal">
     Create Invoice
     </button>
-
-  <!-- The Modal -->
-  <div class="modal" id="myModal">
+​
+​
+    <div class="modal" id="myModal">
     <div class="modal-dialog">
       <div class="modal-content">
-
-        <!-- Modal Header -->
+​
+​
         <div class="modal-header">
           <h4 class="modal-title justify-content-center">Invoice Created</h4>
           <button type="button" class="close" data-dismiss="modal">&times;</button>
         </div>
-
-        <!-- Modal body -->
+​
+​
         <div class="modal-body">
             <table class="table table-borderless">
                 <tr>
                <th>Name</th>
                <th>Total</th>
-               <th class="text-right"><a href="view" class="btn btn-primary" role="button">View</a></th>
-               <th class="text-right"><button  onclick="window.print()" class="btn btn-primary" role="button">Print</button></th>
+               <th class="text-right"><a target="_blank" onclick="window.open('invoive.html','name','width=1000,height=630')" class="btn btn-primary" role="button">View</a></th>
+               <th class="text-right"><a class="btn btn-primary b" role="button">Print</a></th>
                </tr>
             </table>
         </div>
-
-        <!-- Modal footer -->
+​
+​
         <div class="modal-footer">
           <button type="button" class="btn btn-danger text-right" data-dismiss="modal">Print All</button>
         </div>
-
+​
       </div>
+    </div>  -->
     </div>
     </div>
-
-
+​
+​
     <script type="text/javascript">
-       // $(".form_datetime").datetimepicker({format: 'yyyy-mm-dd hh:ii'});
-
-        $(function() {
-            $( "#datepicker-1" ).datepicker({
-
-               dateFormat:"yy-mm-dd",
-
-            });
+​
+             $(function() {
+            $( ".datepicker-1" ).datepicker({ dateFormat:"yy-mm-dd",});
          });
-
+​
+        var fd = new FormData();
+        $.ajax({
+            type        : 'POST',
+            url         : 'localhost:8000/master_invoice',
+            data        : fd,
+            dataType    : 'json',
+                        encode: true
+        })
+        .done(function(data) {
+         console.log(data);
+        });
+        event.preventDefault();
+        });
+​
+    /*   $( "#add" ).click(function() {
+​
+ var newElement = '<tr><td></td><td><input type="text" class="form-control" name="item"/></td><td><input type="number" name="qty" min="1" max="10" value="1" class="form-control text-center"/></td><td><input type="number" name="unit_price" min="1" max="50000" value="1" class="form-control text-center/></td><<td></td><td><button type="submit" class="btn btn-primary" id="add">+</button></td></tr>';
+ $( "#mytable" ).append( $(newElement) );
+​
+ });  */
+​
     </script>
-
+​
 </body>
 </html>

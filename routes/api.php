@@ -25,7 +25,7 @@ Route::get('vendor','VendorController@fetchallVendor');
 Route::put('vendor/{id}','VendorController@updateVendor');
 Route::delete('vendor/{id}','VendorController@deleteVendor');
 
-Route::post('master_invoice', 'MasterInvoiceController@createmasterInvoice');
+//Route::post('master_invoice', 'MasterInvoiceController@createmasterInvoice');
 Route::post('createinvoice', 'MasterInvoiceController@perpareInvoice');
 Route::get('master_invoice', 'MasterInvoiceController@fetchallmasterInvoice');
 Route::put('master_invoice/{id}','MasterInvoiceController@updatemasterInvoice');

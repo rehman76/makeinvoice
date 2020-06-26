@@ -12,12 +12,17 @@ use Illuminate\Support\Facades\View;
 
 class MasterInvoiceController extends Controller
 {
+    public function getInvoice()
+    {
+        return view('create_master');
+    }
 
     public function createmasterInvoice(Request $request)
     {
         $maxTotal = 50000;
         $masterInvoice = new MasterInvoice;
         $input = $request->all();
+        return response()->json($input);
         $lines = $input['line_items'];
         $masterInvoice->fill($request->all());
         $masterInvoice->save();

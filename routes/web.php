@@ -12,7 +12,8 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
-//Route::get('master_invoice', 'MasterInvoiceController@createmasterInvoice');
+Route::post('master_invoice', 'MasterInvoiceController@createmasterInvoice');
+Route::get('master','MasterInvoiceController@getInvoice');
 Route::get('category','CategoryController@fetchallCategory');
 Route::get('createinvoice', 'MasterInvoiceController@prepareInvoice');
 Route::get('view', function()
