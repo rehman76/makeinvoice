@@ -9,6 +9,17 @@
       table, th, td {
   border: 1px solid black;
 }
+.p{
+    list-style-type: none;
+    text-decoration: underline;
+    display: inline-block;
+    padding-left:10px
+}
+@media print{
+    .bt{
+        display: none;
+    }
+}
     </style>
 
 </head>
@@ -18,13 +29,16 @@
   <h2 class="mt-4 text-danger">Ahmed Hardware Store</h2>
   <div style="border: 1px solid black; margin-bottom: 10px;"></div>
   <div class="row my-4">
-      <div class="col-4">   
-  <h6>Customer Name:________________________</h6>
+      <div class="col-4">
+  <h6>Customer Name:<li class="p">Pantera</li></h6>
   </div>
   <div class="col-4">
-  <h6>Date:_________________________</h6>
+  <h6>Date:<li class="p">2020-26-06</li></h6>
   </div>
-  </div>         
+  <div class="col-4 text-right">
+        <button type="button" class="btn btn-primary bt" onclick="window.print()">Print</button>
+  </div>
+  </div>
   <table class="table bdr">
     <thead>
       <tr class="bg-danger">
@@ -35,19 +49,23 @@
         <th>Total</th>
       </tr>
     </thead>
-    <tbody>
-      <tr style="height: 350px;">
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
+    @foreach($invoiceLine as $invoiceLines)
+      <tr style="height: 150px;">
+      <td>{{$invoiceLines->id}}</td>
+      <td>{{$invoiceLines->item}}</td>
+      <td>{{$invoiceLines->quantity}}</td>
+      <td>{{$invoiceLines->unit_price}}</td>
       </tr>
 
-    </tbody>
+   @endforeach
+   <td></td>
+   <td></td>
+   <td></td>
+   <td></td>
+   <td>{{$masterInvoice->total}}</td>
   </table>
-  <h5 class="text-center bg-danger py-2">2nd flooe, Walton Road Lahore</h5>
+  <h5 class="text-center bg-danger py-2">2nd floor, Walton Road Lahore</h5>
 </div>
 
 </body>
-</html>   
+</html>

@@ -16,7 +16,8 @@ Route::post('master_invoice', 'MasterInvoiceController@createmasterInvoice');
 Route::get('master','MasterInvoiceController@getInvoice');
 Route::get('category','CategoryController@fetchallCategory');
 Route::get('createinvoice', 'MasterInvoiceController@prepareInvoice');
-Route::get('view', function()
+Route::get('view','MasterInvoiceController@createInvoice')->name('invoice');
+/*Route::get('view', function()
 {
     return view('invoice');
-});
+})->name('invoice');*/

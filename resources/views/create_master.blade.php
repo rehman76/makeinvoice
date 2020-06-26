@@ -9,7 +9,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
-​
+
     <link href = "https://code.jquery.com/ui/1.10.4/themes/ui-lightness/jquery-ui.css" rel = "stylesheet">
     <script src = "https://code.jquery.com/jquery-1.10.2.js"></script>
     <script src = "https://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
@@ -55,11 +55,74 @@
 ​
           <form action = "{{url('/master_invoice')}}" method="post">
           @csrf
-          <input type="text" name="name"/>
-          <input name="line_items[]"/>
-          <input name="line_items[]"/>
-          <input type="text" name="line_items[item]",value = "5Ltr Bottle"/>
-          <input type="text" name="line_items[unit_price]" value="500"/>
+            <div class="row mt-3">
+              <div class="col-4">
+                <div class="form-inline">
+                  <label for="Name">Name:</label>
+                  <input type="text" class="form-control ml-2" placeholder="Name" name="name" id="name">
+                </div>
+              </div>
+
+              <div class="col-4">
+                <div class="form-inline">
+                  <label for="Date">Date:</label>
+                  <input type = "text" class="form-control datepicker-1 ml-2" placeholder="Select Date" name="date" id="date" >
+                </div>
+              </div>
+            </div>
+​
+            <div class="row mt-4">
+              <div class="col">
+                <div class="form-group">
+                  <label for="Category">Add Category</label>
+                    <select class="form-control" name="category" id="category">
+                        <option  value="">Select Category</option>
+                        @foreach($category as $category)
+                        <option  value="{{$category->id}}">{{$category->name}}</option>
+                        @endforeach
+                    </select>
+                </div>
+              </div>
+            </div>
+
+
+            <div class="row mt-4">
+                <div class="col">
+                  <table class="table"  id="mytable">
+                    <thead>
+                      <tr>
+                      <th>Sr No.</th>
+                      <th>Items</th>
+                      <th>Qty</th>
+                      <th>Unit Price</th>
+                      <th>Price</th>
+                      <th>Add</th>
+                      </tr>
+                    </thead>
+​
+                    <tbody>
+                            <tr id="line_items-group" class="form-group">
+                              <td></td>
+                              <td><input type="text" class="form-control" name="iname" id="line_items"></td>
+                              <td><input type="number" min="" max="" value="1" class="form-control text-center" name="quantity"  id="line_items"></td>
+                              <td><input type="number" min="" max="" value="1" class="form-control text-center" name="unit_price" id="line_items"></td>
+                              <td></td>
+                              <td><button type="button" class="btn btn-primary">+</button></td>
+                            </tr>
+​
+                      <tr>
+                      <td></td>
+                      <td></td>
+                      <td>Total</td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+​
               <div class="text-center mt-5">
                 <button type="submit" class="btn btn-primary" id="add">Create Invoice</button>
               </div>
@@ -68,19 +131,19 @@
 <!----<button type="button" class="btn btn-primary bt" data-toggle="modal" data-target="#myModal">
     Create Invoice
     </button>
-​
+
 ​
     <div class="modal" id="myModal">
     <div class="modal-dialog">
       <div class="modal-content">
-​
-​
+
+
         <div class="modal-header">
           <h4 class="modal-title justify-content-center">Invoice Created</h4>
           <button type="button" class="close" data-dismiss="modal">&times;</button>
         </div>
-​
-​
+
+
         <div class="modal-body">
             <table class="table table-borderless">
                 <tr>
@@ -91,46 +154,57 @@
                </tr>
             </table>
         </div>
-​
-​
+
+
         <div class="modal-footer">
           <button type="button" class="btn btn-danger text-right" data-dismiss="modal">Print All</button>
         </div>
-​
+
       </div>
-    </div>  -->
     </div>
     </div>
+    </div>
+
 ​
-​
-    <script type="text/javascript">
-​
-             $(function() {
-            $( ".datepicker-1" ).datepicker({ dateFormat:"yy-mm-dd",});
-         });
-​
-        var fd = new FormData();
-        $.ajax({
-            type        : 'POST',
-            url         : 'localhost:8000/master_invoice',
-            data        : fd,
-            dataType    : 'json',
-                        encode: true
-        })
-        .done(function(data) {
-         console.log(data);
-        });
-        event.preventDefault();
-        });
-​
-    /*   $( "#add" ).click(function() {
-​
- var newElement = '<tr><td></td><td><input type="text" class="form-control" name="item"/></td><td><input type="number" name="qty" min="1" max="10" value="1" class="form-control text-center"/></td><td><input type="number" name="unit_price" min="1" max="50000" value="1" class="form-control text-center/></td><<td></td><td><button type="submit" class="btn btn-primary" id="add">+</button></td></tr>';
- $( "#mytable" ).append( $(newElement) );
-​
- });  */
-​
-    </script>
-​
+
 </body>
 </html>
+
+<script type="text/javascript">
+
+$(function() {
+$( ".datepicker-1" ).datepicker({ dateFormat:"yy-mm-dd",});
+});
+
+$('form').submit(function(event) {
+var formdata = {
+            "name": $('input[name=name]').val(),
+            "date": $('input[name=date]').val(),
+            "category": $('input[name=category]').val(),
+            "line_items": [{
+                           "item": $('input[name=iname]').val(),
+                           "unit_price":$('input[name="unit_price"]').val(),
+                           "qty":$('input[name="quantityty"]').val(),
+                             }]
+           }
+$.ajax({
+type        : 'POST',
+url         : 'localhost:8000/master_invoice',
+data        : formdata,
+
+           encode: false
+})
+.done(function(data) {
+console.log(data);
+});
+event.preventDefault();
+});
+​
+/*   $( "#add" ).click(function() {
+
+var newElement = '<tr><td></td><td><input type="text" class="form-control" name="item"/></td><td><input type="number" name="qty" min="1" max="10" value="1" class="form-control text-center"/></td><td><input type="number" name="unit_price" min="1" max="50000" value="1" class="form-control text-center/></td><<td></td><td><button type="submit" class="btn btn-primary" id="add">+</button></td></tr>';
+$( "#mytable" ).append( $(newElement) );
+
+});  */
+
+</script>

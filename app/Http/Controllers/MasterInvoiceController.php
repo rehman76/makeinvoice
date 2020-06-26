@@ -9,20 +9,38 @@ use App\Vendor;
 use App\Invoice;
 use App\InvoiceLine;
 use Illuminate\Support\Facades\View;
+use DB;
 
 class MasterInvoiceController extends Controller
 {
     public function getInvoice()
     {
-        return view('create_master');
+        session('max', '5000');
+        $category = DB::table('categories')->get();
+
+        return view('create_master')->with('category', $category);
     }
+
+    public function createInvoice(Request $request)
+    {
+        $invoiceLine = DB::table('invoice_lines')->get();
+        $masterInvoice = MasterInvoice::find(1);
+        //return response()->json($masterInvoice);
+
+        return view('invoice')->with('invoiceLine', $invoiceLine)->with('masterInvoice', $masterInvoice);
+    }
+
 
     public function createmasterInvoice(Request $request)
     {
+        $value = session('max');
+        return response()->json($request->all());
         $maxTotal = 50000;
-        $masterInvoice = new MasterInvoice;
+        $masterInvoice = new MasterInvoice();
         $input = $request->all();
-        return response()->json($input);
+        $vendor = Vendor::WHERE('id','=',8)->get();
+        $invoice = Invoice::get();
+        return view('invoice_view')->with('invoice',$invoice)->with('vendor',$vendor);
         $lines = $input['line_items'];
         $masterInvoice->fill($request->all());
         $masterInvoice->save();
