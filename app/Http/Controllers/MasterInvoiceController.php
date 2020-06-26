@@ -33,8 +33,8 @@ class MasterInvoiceController extends Controller
 
     public function createmasterInvoice(Request $request)
     {
-        $value = session('max');
-        return response()->json($request->all());
+       // $value = session('max');
+       // return response()->json($request->all());
         $maxTotal = 50000;
         $masterInvoice = new MasterInvoice();
         $input = $request->all();
@@ -70,13 +70,16 @@ class MasterInvoiceController extends Controller
                     $qty = $remaining;
                 }
                 $remaining = $remaining - $qty;
-                $vendor = Vendor::orderBy('last_usage_timestamp','desc')->first();
+                $vendor = Vendor::orderBy('last_usage_timestamp','asc')->first();
                 //return response()->json($response);
                 $inv = new Invoice();
                 $inv->master_id = $masterInvoice->id;
                 $inv->vendor_id = $vendor->id;
                 $inv->total = $qty * $ml->unit_price;
                 $inv->save();
+//Update lastusage timestamp of vendor
+                //$vendor->last_usage_timestamp = now();
+                //$vendor->save()
 
                 $invLine  = new InvoiceLine();
                 $invLine->quantity = $qty;
