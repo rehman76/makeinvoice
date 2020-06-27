@@ -27,14 +27,14 @@
 <body>
 
 <div class="container">
-  <h2 class="mt-4 text-danger">Ahmed Hardware Store</h2>
+<h2 class="mt-4 text-danger">{{$vendor->name}}</h2>
   <div style="border: 1px solid black; margin-bottom: 10px;"></div>
   <div class="row my-4">
       <div class="col-4">
-  <h6>Customer Name:<li class="p">Pantera</li></h6>
+  <h6>Customer Name:<li class="p">Pantera Energy</li></h6>
   </div>
   <div class="col-4">
-  <h6>Date:<li class="p">2020-26-06</li></h6>
+  <h6>Date:<li class="p">{{$masterInvoice->date}}</li></h6>
   </div>
   <div class="col-4 text-right">
         <button type="button" class="btn btn-primary bt" onclick="window.print()">Print</button>
@@ -55,6 +55,7 @@
       <td>{{$invoiceLine->item}}</td>
       <td>{{$invoiceLine->quantity}}</td>
       <td>{{$invoiceLine->unit_price}}</td>
+      <td>{{$invoiceLine->sub_total}}</td>
       </tr>
 
    <td></td>
@@ -63,7 +64,7 @@
    <td></td>
    <td>{{$invoice->total}}</td>
   </table>
-  <h5 class="text-center bg-danger py-2">2nd floor, Walton Road Lahore</h5>
+<h5 class="text-center bg-danger py-2">{{$vendor->address}}</h5>
 </div>
 
 </body>

@@ -33,13 +33,14 @@ class MasterInvoiceController extends Controller
 
     public function createmasterInvoice(Request $request)
     {
+        //return response()->json($request->all());
         $current_time = \Carbon\Carbon::now()->toDateTimeString();
        // $value = session('max');
        // return response()->json($request->all());
         $maxTotal = 50000;
 
         //get invoice keys
-        $invoice = Invoice::WHERE('master_id','=',1)->get();
+       /*$invoice = Invoice::WHERE('master_id','=',1)->get();
         $vendorKey = Vendor::find(1);
         $getinvoiceKeys = $invoice->first();
         $attributeInvoice = array_keys($getinvoiceKeys->toArray());
@@ -66,13 +67,16 @@ class MasterInvoiceController extends Controller
 
             }
 
-            return view('invoice_view')->with('results',$results);
+            return view('invoice_view')->with('results',$results);*/
+
 
         $masterInvoice = new MasterInvoice();
         $input = $request->all();
 
         $lines = $input['line_items'];
-        $masterInvoice->fill($request->all());
+        $masterInvoice->name = $input['name'];
+        $masterInvoice->date = $input['date'];
+        $masterInvoice->category_id = $input['category'];
         $masterInvoice->save();
         $lines_array = array();
         foreach($lines as $line)
@@ -121,15 +125,33 @@ class MasterInvoiceController extends Controller
             }
         }
 
-        /*$invoice = Invoice::WHERE('master_id','=',$masterInvoice->id)->get();
-        foreach($invoice as $invoices)
+        $invoice = Invoice::WHERE('master_id','=',$masterInvoice->id)->get();
+        $vendorCategory = Vendor::WHERE('category_id','=',$masterInvoice->category_id)->get();
+        foreach($vendorCategory as $vendorCategories)
         {
-            $arr[] = $invoices->vendor_id;
+            $arr[] = $vendorCategories->category_id;
         }
         $vendor = DB::table('vendors')
-                            ->WhereIn('id',$arr)->get();
+                            ->WhereIn('category_id',$arr)->get();
+        //return response()->json($vendor);
 
-            return view('invoice_view')->with('invoice',$invoice)->with('vendor',$vendor);*/
+        $vendors = $vendor->toArray();
+        //return response()->json
+        $results = array();
+        foreach($invoice as $key=>$data)
+        {
+            //return response()->json($vendors[$key]->name);
+            $newarr =array();
+            $newarr['id'] = $data->id;
+            $newarr['total'] = $data->total;
+            $newarr['name'] = $vendors[$key]->name;
+            $results[] = $newarr;
+
+        }
+        //dd($results);
+
+        return view('invoice_view')->with('results',$results);
+
 
     }
 
@@ -158,9 +180,12 @@ class MasterInvoiceController extends Controller
     public function fetchStatement($id)
     {
         $invoiceLine = InvoiceLine::find($id);
-        $invoice = Invoice::select('total')->find($id);
+        $invoice = Invoice::find($id);
+        $masterInvoice = MasterInvoice::WHERE('id','=',$invoice->master_id)->first();
+        //return response()->json($invoice->vendor_id);
+        $vendor = Vendor::WHERE('id',$invoice->vendor_id)->first();
         //return response()->json($invoice);
-        return view('invoice', compact(['invoiceLine', 'invoice']));
+        return view('invoice', compact(['invoiceLine', 'invoice', 'vendor' ,'masterInvoice']));
 
     }
 
