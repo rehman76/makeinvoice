@@ -77,6 +77,7 @@ class MasterInvoiceController extends Controller
         $masterInvoice->name = $input['name'];
         $masterInvoice->date = $input['date'];
         $masterInvoice->category_id = $input['category'];
+
         $masterInvoice->save();
         $lines_array = array();
         foreach($lines as $line)
@@ -90,9 +91,6 @@ class MasterInvoiceController extends Controller
             $ml->save();
             array_push($lines_array,$ml);
         }
-        $masterInvoice->total = array_reduce($lines_array, function($val1,$val2){
-            return $val1 + $val2->sub_total;
-        }, 0);
         $masterInvoice->save();
         foreach($lines_array as $ml){
             $maxQty = $maxTotal / $ml->unit_price;
@@ -126,7 +124,7 @@ class MasterInvoiceController extends Controller
         }
 
         $invoice = Invoice::WHERE('master_id','=',$masterInvoice->id)->get();
-        $vendorCategory = Vendor::WHERE('category_id','=',$masterInvoice->category_id)->get();
+        $vendorCategory = Vendor::WHERE('category_id','=',$masterInvoice->category_id)->WHERE('id','=',$inv->vendor_id)->get();
         foreach($vendorCategory as $vendorCategories)
         {
             $arr[] = $vendorCategories->category_id;
