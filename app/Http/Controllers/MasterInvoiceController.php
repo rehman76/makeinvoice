@@ -91,6 +91,7 @@ class MasterInvoiceController extends Controller
             $ml->save();
             array_push($lines_array,$ml);
         }
+        //It add sub_total of line items
         $masterInvoice->total = array_reduce($lines_array, function($val1,$val2){
             return $val1 + $val2->sub_total;
         }, 0);
