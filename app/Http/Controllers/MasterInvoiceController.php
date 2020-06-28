@@ -124,29 +124,35 @@ class MasterInvoiceController extends Controller
         }
 
         $invoice = Invoice::WHERE('master_id','=',$masterInvoice->id)->get();
-        $vendorCategory = Vendor::WHERE('category_id','=',$masterInvoice->category_id)->WHERE('id','=',$inv->vendor_id)->get();
-        foreach($vendorCategory as $vendorCategories)
+        //return response()->json($vendorCategory);
+        foreach($invoice as $invoices)
         {
-            $arr[] = $vendorCategories->category_id;
+            $arr[] = $invoices->vendor_id;
         }
-        $vendor = DB::table('vendors')
-                            ->WhereIn('category_id',$arr)->get();
-        //return response()->json($vendor);
+        $ids = join("','",$arr);
+        $test = join(",",$arr);
+        //return response()->json($test);
+        //$vendor = Vendor::WHERE('category_id','=',$masterInvoice->category_id)->WhereIn('id',$arr)->get();
+        //return response()->json($vendorCategory);
+        /*$vendor = DB::table('vendors')
+                            ->WhereIn('id',$arr)
+                            ->WHERE('category_id','=',$masterInvoice->category_id)
+                            ->get();*/
 
-        $vendors = $vendor->toArray();
-        //return response()->json
+        $vendorData = DB::select( DB::raw("SELECT * FROM vendors WHERE id IN ('$ids') AND category_id = '$masterInvoice->category_id' ORDER BY FIND_IN_SET (id,'$test') ") );
+        //return response()->json($results);
+        //$vendors = $results->toArray();
         $results = array();
         foreach($invoice as $key=>$data)
         {
-            //return response()->json($vendors[$key]->name);
+            //return response()->json($vendorData[$key]->name);
             $newarr =array();
             $newarr['id'] = $data->id;
             $newarr['total'] = $data->total;
-            $newarr['name'] = $vendors[$key]->name;
+            $newarr['name'] = $vendorData[$key]->name;
             $results[] = $newarr;
 
         }
-        //dd($results);
 
         return view('invoice_view')->with('results',$results);
 
