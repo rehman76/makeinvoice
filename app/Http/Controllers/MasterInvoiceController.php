@@ -91,6 +91,9 @@ class MasterInvoiceController extends Controller
             $ml->save();
             array_push($lines_array,$ml);
         }
+        $masterInvoice->total = array_reduce($lines_array, function($val1,$val2){
+            return $val1 + $val2->sub_total;
+        }, 0);
         $masterInvoice->save();
         foreach($lines_array as $ml){
             $maxQty = $maxTotal / $ml->unit_price;
