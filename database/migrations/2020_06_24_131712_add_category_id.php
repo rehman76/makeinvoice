@@ -15,7 +15,7 @@ class AddCategoryId extends Migration
     {
         Schema::table('master_invoices', function (Blueprint $table) {
             $table->integer('category_id')->unsigned()->nullable();
-            $table->foreign('category_id')->references('id')->on('master_invoices');
+            $table->foreign('category_id')->references('id')->on('categories');
         });
     }
 

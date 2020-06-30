@@ -8,6 +8,7 @@ use App\MasterInvoiceLine;
 use App\Vendor;
 use App\Invoice;
 use App\InvoiceLine;
+use App\Category;
 use Illuminate\Support\Facades\View;
 use DB;
 
@@ -106,10 +107,11 @@ class MasterInvoiceController extends Controller
                     $qty = $remaining;
                 }
                 $remaining = $remaining - $qty;
-                $vendor = Vendor::orderBy('last_usage_timestamp','asc')->first();
+                $vendor = Vendor::orderBy('last_usage_timestamp','asc')->Where('category_id','=',$input['category'])->first();
                 //return response()->json($response);
                 $inv = new Invoice();
                 $inv->master_id = $masterInvoice->id;
+                //Vendor::Where('category_id','=',$input['category'])->get();
                 $inv->vendor_id = $vendor->id;
                 $inv->total = $qty * $ml->unit_price;
                 $inv->save();
@@ -128,11 +130,20 @@ class MasterInvoiceController extends Controller
         }
 
         $invoice = Invoice::WHERE('master_id','=',$masterInvoice->id)->get();
+        //$category = Category::all();
+        //return response()->json($category);
+
         //return response()->json($vendorCategory);
         foreach($invoice as $invoices)
         {
             $arr[] = $invoices->vendor_id;
         }
+
+        /*foreach($category as $categories)
+        {
+            $cat[] = $categories->id;
+        }
+        $catIds = join("','",$cat);*/
         $ids = join("','",$arr);
         $test = join(",",$arr);
         //return response()->json($test);
@@ -142,14 +153,13 @@ class MasterInvoiceController extends Controller
                             ->WhereIn('id',$arr)
                             ->WHERE('category_id','=',$masterInvoice->category_id)
                             ->get();*/
-
-        $vendorData = DB::select( DB::raw("SELECT * FROM vendors WHERE id IN ('$ids') AND category_id = '$masterInvoice->category_id' ORDER BY FIND_IN_SET (id,'$test') ") );
-        //return response()->json($results);
-        //$vendors = $results->toArray();
+        //return response()->json($ids.'='.$masterInvoice->category_id);
+        $vendorData = DB::select( DB::raw("SELECT * FROM vendors WHERE id IN ('$ids') AND category_id = '$masterInvoice->category_id'  ORDER BY FIND_IN_SET (id,'$test') ") );
+        //return response()->json($vendorData);
         $results = array();
         foreach($invoice as $key=>$data)
         {
-            //return response()->json($vendorData[$key]->name);
+          // return response()->json($vendorData[$key]->name);
             $newarr =array();
             $newarr['id'] = $data->id;
             $newarr['total'] = $data->total;
